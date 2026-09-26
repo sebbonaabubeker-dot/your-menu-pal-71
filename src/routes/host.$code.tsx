@@ -10,7 +10,7 @@ import { useGameState } from "@/hooks/useGameState";
 import { useStartCountdown } from "@/components/game/StartCountdown";
 import { WinnerBanner } from "@/components/game/WinnerBanner";
 import { Button } from "@/components/ui/button";
-import { controlRoom } from "@/lib/game.functions";
+import { controlRoom, type RoomState } from "@/lib/game.functions";
 
 export const Route = createFileRoute("/host/$code")({
   head: () => ({
@@ -78,6 +78,7 @@ function HostScreen() {
   const status = data?.status;
   const resolved = data?.resolved ?? false;
   const qIndex = q?.index ?? 0;
+  const elapsed = usePlayTimer(status);
   const countdown = useStartCountdown(status, q?.index);
 
   // Doğru cevap verildiğinde sıradaki soruya geç
@@ -200,6 +201,7 @@ function HostScreen() {
             </section>
           ) : data.status === "FINISHED" ? (
             <section className="py-6 text-center">
+              <ScoreHeader scores={data.scores} players={data.players} elapsed={elapsed} />
               <WinnerBanner winner={data.winner} players={data.players} />
               <div className="mt-6">
                 <TugOfWarArena ropePosition={data.ropePosition} />
@@ -207,6 +209,7 @@ function HostScreen() {
             </section>
           ) : (
             <section>
+              <ScoreHeader scores={data.scores} players={data.players} elapsed={elapsed} />
               <div
                 className={isFullscreen ? "" : "-mx-4 sm:-mx-6"}
               >
