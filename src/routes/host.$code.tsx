@@ -178,7 +178,7 @@ function HostScreen() {
               </h1>
               </div>
               <div className="flex min-h-0 w-full flex-1 items-center justify-center">
-              <div className="w-[clamp(130px,26vh,270px)] rounded-[2rem] border-2 border-border bg-background p-3 text-foreground shadow-[var(--shadow-panel)] sm:p-4">
+              <div className="w-[clamp(210px,44vh,460px)] rounded-[2rem] border-2 border-border bg-background p-3 text-foreground shadow-[var(--shadow-panel)] sm:p-4">
                 <QRCode value={joinUrl} size={240} bgColor="transparent" fgColor="currentColor" className="h-auto w-full" />
               </div>
               </div>
