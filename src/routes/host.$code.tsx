@@ -314,21 +314,18 @@ function ScoreHeader({
   const seconds = elapsed % 60;
   const clock = `${minutes}:${String(seconds).padStart(2, "0")}`;
   return (
-    <div className="mb-4 grid grid-cols-[1fr_auto_1fr] items-center gap-2 sm:mb-5 sm:gap-6">
+    <div className="mb-2 grid grid-cols-[1fr_auto_1fr] items-center gap-2 sm:mb-3 sm:gap-3">
       <ScoreCard
         team={1}
         name={t1?.name}
         correct={scores?.[1] ?? 0}
       />
-      <div className="rounded-2xl border-2 border-border bg-background px-4 py-2 text-center shadow-[var(--shadow-panel)]">
-        <p className="text-[10px] font-bold tracking-widest text-muted-foreground sm:text-xs">
+      <div className="rounded-lg border border-border bg-background px-2 py-1 text-center shadow-[var(--shadow-panel)] sm:px-3">
+        <p className="text-[8px] font-bold tracking-widest text-muted-foreground sm:text-[10px]">
           SÜRE
         </p>
-        <p className="text-2xl font-extrabold tabular-nums text-foreground sm:text-4xl">
+        <p className="text-base font-extrabold leading-tight tabular-nums text-foreground sm:text-lg">
           {clock}
-        </p>
-        <p className="text-[10px] font-semibold text-muted-foreground sm:text-xs">
-          {minutes > 0 ? "dakika:saniye" : "saniye"}
         </p>
       </div>
       <ScoreCard
