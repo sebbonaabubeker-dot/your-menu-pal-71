@@ -351,20 +351,20 @@ function ScoreCard({
 }) {
   return (
     <div
-      className={`min-w-0 rounded-2xl border-2 border-border bg-background px-3 py-2 shadow-[var(--shadow-panel)] sm:px-5 sm:py-3 ${
+      className={`min-w-0 rounded-lg border border-border bg-background px-2 py-1 shadow-[var(--shadow-panel)] sm:px-3 ${
         align === "right" ? "text-right" : "text-left"
       }`}
     >
       <p
-        className={`text-xs font-bold tracking-wider sm:text-sm ${
+        className={`truncate text-[10px] font-bold tracking-wide sm:text-xs ${
           team === 1 ? "text-team1" : "text-team2"
         }`}
       >
         {name ? name.toUpperCase() : `TAKIM ${team}`}
       </p>
-      <p className="mt-0.5 text-2xl font-extrabold text-foreground sm:text-4xl">
+      <p className="text-lg font-extrabold leading-tight text-foreground sm:text-xl">
         {correct}
-        <span className="ml-1 text-xs font-bold text-muted-foreground sm:text-base">DOĞRU</span>
+        <span className="ml-1 text-[9px] font-bold text-muted-foreground sm:text-[10px]">DOĞRU</span>
       </p>
     </div>
   );
