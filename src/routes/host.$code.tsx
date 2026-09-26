@@ -10,7 +10,7 @@ import { useGameState } from "@/hooks/useGameState";
 import { useStartCountdown } from "@/components/game/StartCountdown";
 import { WinnerBanner } from "@/components/game/WinnerBanner";
 import { Button } from "@/components/ui/button";
-import { controlRoom } from "@/lib/game.functions";
+import { controlRoom, type RoomState } from "@/lib/game.functions";
 
 export const Route = createFileRoute("/host/$code")({
   head: () => ({
@@ -78,6 +78,7 @@ function HostScreen() {
   const status = data?.status;
   const resolved = data?.resolved ?? false;
   const qIndex = q?.index ?? 0;
+  const elapsed = usePlayTimer(status);
   const countdown = useStartCountdown(status, q?.index);
 
   // Doğru cevap verildiğinde sıradaki soruya geç
@@ -200,6 +201,7 @@ function HostScreen() {
             </section>
           ) : data.status === "FINISHED" ? (
             <section className="py-6 text-center">
+              <ScoreHeader scores={data.scores} players={data.players} elapsed={elapsed} />
               <WinnerBanner winner={data.winner} players={data.players} />
               <div className="mt-6">
                 <TugOfWarArena ropePosition={data.ropePosition} />
@@ -207,6 +209,7 @@ function HostScreen() {
             </section>
           ) : (
             <section>
+              <ScoreHeader scores={data.scores} players={data.players} elapsed={elapsed} />
               <div
                 className={isFullscreen ? "" : "-mx-4 sm:-mx-6"}
               >
@@ -272,6 +275,101 @@ function HostScreen() {
         )}
       </div>
     </main>
+  );
+}
+
+function usePlayTimer(status: RoomState["status"] | undefined) {
+  const [elapsed, setElapsed] = useState(0);
+  const prev = useRef<RoomState["status"] | undefined>(undefined);
+
+  useEffect(() => {
+    // Yeni tur (başlat / yeniden başlat): sayaç sıfırlanır; duraklatmadan dönüşte devam eder
+    if (status === "PLAYING" && prev.current !== "PAUSED" && prev.current !== "PLAYING") {
+      setElapsed(0);
+    }
+    prev.current = status;
+  }, [status]);
+
+  useEffect(() => {
+    if (status !== "PLAYING") return undefined;
+    const id = setInterval(() => setElapsed((e) => e + 1), 1000);
+    return () => clearInterval(id);
+  }, [status]);
+
+  return elapsed;
+}
+
+function ScoreHeader({
+  scores,
+  players,
+  elapsed,
+}: {
+  scores: RoomState["scores"] | undefined;
+  players: RoomState["players"];
+  elapsed: number;
+}) {
+  const t1 = players.find((p) => p.team === 1);
+  const t2 = players.find((p) => p.team === 2);
+  const minutes = Math.floor(elapsed / 60);
+  const seconds = elapsed % 60;
+  const clock = `${minutes}:${String(seconds).padStart(2, "0")}`;
+  return (
+    <div className="mb-4 grid grid-cols-[1fr_auto_1fr] items-center gap-2 sm:mb-5 sm:gap-6">
+      <ScoreCard
+        team={1}
+        name={t1?.name}
+        correct={scores?.[1] ?? 0}
+      />
+      <div className="rounded-2xl border-2 border-border bg-background px-4 py-2 text-center shadow-[var(--shadow-panel)]">
+        <p className="text-[10px] font-bold tracking-widest text-muted-foreground sm:text-xs">
+          SÜRE
+        </p>
+        <p className="text-2xl font-extrabold tabular-nums text-foreground sm:text-4xl">
+          {clock}
+        </p>
+        <p className="text-[10px] font-semibold text-muted-foreground sm:text-xs">
+          {minutes > 0 ? "dakika:saniye" : "saniye"}
+        </p>
+      </div>
+      <ScoreCard
+        team={2}
+        name={t2?.name}
+        correct={scores?.[2] ?? 0}
+        align="right"
+      />
+    </div>
+  );
+}
+
+function ScoreCard({
+  team,
+  name,
+  correct,
+  align = "left",
+}: {
+  team: 1 | 2;
+  name?: string | undefined;
+  correct: number;
+  align?: "left" | "right";
+}) {
+  return (
+    <div
+      className={`min-w-0 rounded-2xl border-2 border-border bg-background px-3 py-2 shadow-[var(--shadow-panel)] sm:px-5 sm:py-3 ${
+        align === "right" ? "text-right" : "text-left"
+      }`}
+    >
+      <p
+        className={`text-xs font-bold tracking-wider sm:text-sm ${
+          team === 1 ? "text-team1" : "text-team2"
+        }`}
+      >
+        {name ? name.toUpperCase() : `TAKIM ${team}`}
+      </p>
+      <p className="mt-0.5 text-2xl font-extrabold text-foreground sm:text-4xl">
+        {correct}
+        <span className="ml-1 text-xs font-bold text-muted-foreground sm:text-base">DOĞRU</span>
+      </p>
+    </div>
   );
 }
 

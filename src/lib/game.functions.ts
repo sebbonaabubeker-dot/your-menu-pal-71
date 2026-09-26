@@ -34,6 +34,8 @@ export type RoomState = {
   me: { answer: string; isCorrect: boolean } | null;
   /** Bu soru çözüldü mü (doğru cevap verildi ya da herkes cevapladı) */
   resolved: boolean;
+  /** Takım bazında toplam doğru cevap sayısı */
+  scores: { 1: number; 2: number };
 };
 
 async function db() {
@@ -198,6 +200,21 @@ export const getRoomState = createServerFn({ method: "POST" })
       if (mine) me = { answer: mine.answer_text ?? "", isCorrect: mine.is_correct };
     }
 
+    // Takım bazında toplam doğru sayısı (tüm oyun boyunca)
+    const { data: allAnswers } = await supabase
+      .from("answers")
+      .select("player_id, is_correct")
+      .eq("room_id", room.id);
+    const teamOf = new Map<string, number>(
+      (players ?? []).map((p: any) => [p.id, p.team as number]),
+    );
+    const scores: { 1: number; 2: number } = { 1: 0, 2: 0 };
+    for (const a of (allAnswers ?? []) as Array<{ player_id: string; is_correct: boolean }>) {
+      if (!a.is_correct) continue;
+      const t = teamOf.get(a.player_id);
+      if (t === 1 || t === 2) scores[t] += 1;
+    }
+
     return {
       code: room.room_code,
       status: room.status as RoomStatus,
@@ -213,6 +230,7 @@ export const getRoomState = createServerFn({ method: "POST" })
       question,
       me,
       resolved,
+      scores,
     };
   });
 
