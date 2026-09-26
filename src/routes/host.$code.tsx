@@ -351,7 +351,7 @@ function ScoreCard({
 }) {
   return (
     <div
-      className={`min-w-0 rounded-lg border border-border bg-background px-2 py-1 shadow-[var(--shadow-panel)] sm:px-3 ${
+      className={`min-w-0 leading-tight ${
         align === "right" ? "text-right" : "text-left"
       }`}
     >
@@ -362,9 +362,11 @@ function ScoreCard({
       >
         {name ? name.toUpperCase() : `TAKIM ${team}`}
       </p>
-      <p className="text-lg font-extrabold leading-tight text-foreground sm:text-xl">
+      <p className="text-sm font-extrabold text-foreground sm:text-base">
         {correct}
-        <span className="ml-1 text-[9px] font-bold text-muted-foreground sm:text-[10px]">DOĞRU</span>
+        <span className="ml-1 text-[9px] font-semibold text-muted-foreground">
+          DOĞRU
+        </span>
       </p>
     </div>
   );
