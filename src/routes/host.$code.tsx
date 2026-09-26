@@ -314,17 +314,17 @@ function ScoreHeader({
   const seconds = elapsed % 60;
   const clock = `${minutes}:${String(seconds).padStart(2, "0")}`;
   return (
-    <div className="mb-2 grid grid-cols-[1fr_auto_1fr] items-center gap-2 sm:mb-3 sm:gap-3">
+    <div className="mb-1 grid grid-cols-[1fr_auto_1fr] items-center gap-2 sm:mb-2 sm:gap-3">
       <ScoreCard
         team={1}
         name={t1?.name}
         correct={scores?.[1] ?? 0}
       />
-      <div className="rounded-lg border border-border bg-background px-2 py-1 text-center shadow-[var(--shadow-panel)] sm:px-3">
-        <p className="text-[8px] font-bold tracking-widest text-muted-foreground sm:text-[10px]">
+      <div className="text-center leading-none">
+        <p className="text-[7px] font-bold tracking-widest text-muted-foreground">
           SÜRE
         </p>
-        <p className="text-base font-extrabold leading-tight tabular-nums text-foreground sm:text-lg">
+        <p className="text-xs font-semibold tabular-nums text-foreground sm:text-sm">
           {clock}
         </p>
       </div>
