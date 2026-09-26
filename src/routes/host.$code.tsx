@@ -314,17 +314,17 @@ function ScoreHeader({
   const seconds = elapsed % 60;
   const clock = `${minutes}:${String(seconds).padStart(2, "0")}`;
   return (
-    <div className="mb-2 grid grid-cols-[1fr_auto_1fr] items-center gap-2 sm:mb-3 sm:gap-3">
+    <div className="mb-1 grid grid-cols-[1fr_auto_1fr] items-center gap-2 sm:mb-2 sm:gap-3">
       <ScoreCard
         team={1}
         name={t1?.name}
         correct={scores?.[1] ?? 0}
       />
-      <div className="rounded-lg border border-border bg-background px-2 py-1 text-center shadow-[var(--shadow-panel)] sm:px-3">
-        <p className="text-[8px] font-bold tracking-widest text-muted-foreground sm:text-[10px]">
+      <div className="text-center leading-none">
+        <p className="text-[7px] font-bold tracking-widest text-muted-foreground">
           SÜRE
         </p>
-        <p className="text-base font-extrabold leading-tight tabular-nums text-foreground sm:text-lg">
+        <p className="text-xs font-semibold tabular-nums text-foreground sm:text-sm">
           {clock}
         </p>
       </div>
@@ -351,7 +351,7 @@ function ScoreCard({
 }) {
   return (
     <div
-      className={`min-w-0 rounded-lg border border-border bg-background px-2 py-1 shadow-[var(--shadow-panel)] sm:px-3 ${
+      className={`min-w-0 leading-tight ${
         align === "right" ? "text-right" : "text-left"
       }`}
     >
@@ -362,9 +362,11 @@ function ScoreCard({
       >
         {name ? name.toUpperCase() : `TAKIM ${team}`}
       </p>
-      <p className="text-lg font-extrabold leading-tight text-foreground sm:text-xl">
+      <p className="text-sm font-extrabold text-foreground sm:text-base">
         {correct}
-        <span className="ml-1 text-[9px] font-bold text-muted-foreground sm:text-[10px]">DOĞRU</span>
+        <span className="ml-1 text-[9px] font-semibold text-muted-foreground">
+          DOĞRU
+        </span>
       </p>
     </div>
   );
